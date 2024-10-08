@@ -7,8 +7,11 @@ Réalisé par :
 - Maxime EMONNOT
 - Maimouna TIMERA
 
-## Choix technologique
+## Choix technologiques
 
+| Back-end | Front-end | Base de données |
+|----------|-----------|-----------------|
+| Django   | React     | MongoDB         |
 
 
 ## Structure du projet
