@@ -9,7 +9,7 @@ Réalisé par :
 
 ## Choix technologique
 
-**TODO**
+
 
 ## Structure du projet
 
