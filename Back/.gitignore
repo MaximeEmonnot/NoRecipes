@@ -1,0 +1,3 @@
+# Cache Django
+/NoRecipes/__pycache__
+/db.sqlite3
