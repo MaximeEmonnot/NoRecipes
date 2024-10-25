@@ -1,3 +1,6 @@
-# Cache Django
+# Cache Python/Django
+/databaseTest/__pycache__
+/databaseTest/migrations/__pycache__
 /NoRecipes/__pycache__
+/__pycache__
 /db.sqlite3
