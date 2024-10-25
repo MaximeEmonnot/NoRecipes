@@ -11,7 +11,7 @@ Réalisé par :
 
 | Back-end | Front-end | Base de données |
 |----------|-----------|-----------------|
-| Django   | React     | MongoDB         |
+| Django   | React     | Neo4J           |
 
 
 ## Structure du projet
