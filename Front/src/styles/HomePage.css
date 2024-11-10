@@ -1,0 +1,44 @@
+.home-page {
+    background-color: white;
+    padding-bottom: 20px;
+    margin-top: 60px;
+}
+
+ 
+.hero-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-size: cover;
+    text-align: center;
+    width: 100%;
+    margin-top: 500px;
+    background-color: white;
+}
+
+.banner-image {
+    width: 100%; 
+    height: auto; 
+}
+
+
+.hero-section h1 {
+    font-size: 2.5em;
+    margin-bottom: 10px;
+}
+
+.hero-section p {
+    font-size: 1.2em;
+    margin-bottom: 20px;
+}
+
+/* Section des cartes de recettes */
+.recipe-cards {
+    display: flex;
+    justify-content: space-around;
+    margin: 40px auto;
+    max-width: 1200px;
+    padding: 20px;
+    gap: 20px;
+    flex-wrap: wrap;
+}
