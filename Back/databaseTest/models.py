@@ -18,3 +18,9 @@ class Ingredient(StructuredNode):
     description = StringProperty()
     prix = FloatProperty()
     images = JSONProperty()
+
+class Utensile(StructuredNode):
+    titre = StringProperty(unique_index=True, required=True)
+    description = StringProperty()
+    prix = FloatProperty()
+    images = JSONProperty()
