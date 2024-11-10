@@ -13,4 +13,8 @@ class Recipe(StructuredNode):
     temps_cuisson = IntegerProperty()
     temps_repos = IntegerProperty()
 
-
+class Ingredient(StructuredNode):
+    titre = StringProperty(unique_index=True, required=True)
+    description = StringProperty()
+    prix = FloatProperty()
+    images = JSONProperty()
