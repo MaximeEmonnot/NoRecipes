@@ -1,7 +1,51 @@
 from django.db import models
-from neomodel import StructuredNode, StringProperty, IntegerProperty, FloatProperty, JSONProperty, RelationshipTo, RelationshipFrom
+import uuid
+from neomodel import StructuredNode, StringProperty, IntegerProperty, FloatProperty, JSONProperty, RelationshipTo, RelationshipFrom, UniqueIdProperty, StructuredRel
 
 # Create your models here.
+
+# Relation entre Recette et Ingrédient
+class Contient(StructuredRel):
+    quantite = FloatProperty()
+    # type = EnumProperty(UnitIngredient)
+    type_unite = StringProperty(choices={
+        "g": "Grammes",
+        "ml": "Millilitres",
+        "l": "Litres",
+        "cs": "Cuillère à soupe",
+        "cc": "Cuillère à café"
+    })
+
+# Relation entre Recette et Ustensile
+class Utilise(StructuredRel):
+    nombre = IntegerProperty(default=1)
+
+class Comments(StructuredNode):
+    uuid = UniqueIdProperty()
+    texte = StringProperty()
+    images = JSONProperty(default=[])
+
+    # Relation avec recette 
+    recette = RelationshipFrom('Recipe', 'POSSEDE')
+
+class Utensil(StructuredNode):
+    titre = StringProperty(unique_index=True, required=True)
+    description = StringProperty()
+    prix = FloatProperty()
+    images = JSONProperty()
+
+    # Relation avec recette avec la relation UTILISE
+    ustensiles = RelationshipFrom('Recipe', 'UTILISE', model=Utilise)
+
+class Ingredient(StructuredNode):
+    titre = StringProperty(unique_index=True, required=True)
+    description = StringProperty()
+    prix = FloatProperty()
+    images = JSONProperty()
+
+    # Relation avec Recipe avec la relation CONTIENT
+    recettes = RelationshipFrom('Recipe', 'CONTIENT', model=Contient)
+
 class Recipe(StructuredNode):
     titre = StringProperty(unique_index=True, required=True)
     origine = StringProperty()
@@ -13,14 +57,21 @@ class Recipe(StructuredNode):
     temps_cuisson = IntegerProperty()
     temps_repos = IntegerProperty()
 
-class Ingredient(StructuredNode):
+    # Relation recette - catégorie
+    categorie = RelationshipTo('Category', 'APPARTIENT_A')
+
+    # Relation vers Ingredient avec la relation CONTIENT
+    ingredients = RelationshipTo('Ingredient', 'CONTIENT', model=Contient)
+
+    # Relation vers ustensile avec la relation UTILISE
+    ustensiles = RelationshipTo('Utensil', 'UTILISE', model=Utilise)
+
+    # Relation avec commentaires
+    commentaires = RelationshipTo('Comments', 'POSSEDE')
+
+class Category(StructuredNode):
     titre = StringProperty(unique_index=True, required=True)
-    description = StringProperty()
-    prix = FloatProperty()
     images = JSONProperty()
 
-class Utensile(StructuredNode):
-    titre = StringProperty(unique_index=True, required=True)
-    description = StringProperty()
-    prix = FloatProperty()
-    images = JSONProperty()
+    # Relation catégorie - recette
+    recettes = RelationshipFrom('Recipe', 'APPARTIENT_A')

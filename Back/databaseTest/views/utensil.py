@@ -1,46 +1,46 @@
 from django.shortcuts import render
 from django.http.response import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from databaseTest.models import Utensile
+from databaseTest.models import Utensil
 import json
 
 from utils import RunCypher, GetDataFromNode
 
 # Récupération de tous les Ustensiles
 @csrf_exempt
-def get_all_utensiles(request):
+def get_all_utensils(request):
     if request.method == "GET":
-        utensiles = Utensile.nodes.all()
+        ustensiles = Utensil.nodes.all()
         data = [
             {
-                "titre": utensile.titre,
-                "prix": utensile.prix,
-                "description": utensile.description,
-                "images": utensile.images
+                "titre": ustensile.titre,
+                "prix": ustensile.prix,
+                "description": ustensile.description,
+                "images": ustensile.images
             }
-            for utensile in utensiles
+            for ustensile in ustensiles
         ]
         return JsonResponse({"ustensile": data}, safe=False)
 
 # Récupération ustensile par le titre
 @csrf_exempt
-def get_utensile_by_title(request, title):
+def get_utensil_by_title(request, title):
     if request.method == "GET":
         try:
-            utensile = Utensile.nodes.get(titre=title)
+            ustensile = Utensil.nodes.get(titre=title)
             data = {
-               "titre": utensile.titre,
-               "prix": utensile.prix,
-               "description": utensile.description,
-               "images": utensile.images
+               "titre": ustensile.titre,
+               "prix": ustensile.prix,
+               "description": ustensile.description,
+               "images": ustensile.images
             }
             return JsonResponse({"utensile": data})
-        except Stensile.DoesNotExist:
+        except Utensil.DoesNotExist:
             return JsonResponse({"error": "Ustensile non trouvé"}, status=404)
 
 # Ajout de ustensile
 @csrf_exempt
-def add_utensile(request):
+def add_utensil(request):
     if request.method == "POST":
         try:
             data = json.loads(request.body)
@@ -62,48 +62,48 @@ def add_utensile(request):
         if not all([titre, prix, description]):
             return JsonResponse({"error": "Tous les champs sont requis."}, status=400)
 
-        utensile = Utensile(
+        ustensile = Utensil(
             titre=titre,
             prix=prix,
             description=description,
             images=images
         )
-        utensile.save()
+        ustensile.save()
 
-        return JsonResponse({"message": "Ustensile créé avec succès", "utensile_id": utensile.element_id})
+        return JsonResponse({"message": "Ustensile créé avec succès", "ustensile_id": ustensile.element_id})
 
 # Modification ustensile
 @csrf_exempt
-def update_utensile(request, title):
+def update_utensil(request, title):
     if request.method == "PUT":
         try:
-            utensile = Utensile.nodes.get(titre=title)
+            ustensile = Utensil.nodes.get(titre=title)
             data = json.loads(request.body)
             
-            utensile.prix = data.get("prix", utensile.prix)
-            utensile.description = data.get("description", utensile.description)
-            utensile.images = data.get("images", utensile.images)
+            ustensile.prix = data.get("prix", ustensile.prix)
+            ustensile.description = data.get("description", ustensile.description)
+            ustensile.images = data.get("images", ustensile.images)
             
-            utensile.save()
+            ustensile.save()
             
             return JsonResponse({"message": "Ustensile mis à jour avec succès"})
         
-        except Utensile.DoesNotExist:
+        except Utensil.DoesNotExist:
             return JsonResponse({"error": "Ustensile non trouvé"}, status=404)
         except json.JSONDecodeError:
             return JsonResponse({"error": "Données invalides"}, status=400)
 
 # Suppression ustensile
 @csrf_exempt
-def delete_utensile(request, title):
+def delete_utensil(request, title):
     if request.method == "DELETE":
         try:
-            utensile = Utensile.nodes.get(titre=title)
+            ustensile = Utensil.nodes.get(titre=title)
 
-            utensile.delete()
+            ustensile.delete()
             
             return JsonResponse({"message": "Ustensile supprimé avec succès"})
         
-        except Utensile.DoesNotExist:
+        except Utensil.DoesNotExist:
             return JsonResponse({"error": "Ustensile non trouvé"}, status=404)        
 
