@@ -24,6 +24,7 @@ class Comments(StructuredNode):
     uuid = UniqueIdProperty()
     texte = StringProperty()
     images = JSONProperty(default=[])
+    note = IntegerProperty(required=True, choices=range(1, 6))  # Note entre 1 et 5
 
     # Relation avec recette 
     recette = RelationshipFrom('Recipe', 'POSSEDE')
@@ -48,8 +49,10 @@ class Ingredient(StructuredNode):
 
 class Recipe(StructuredNode):
     titre = StringProperty(unique_index=True, required=True)
-    origine = StringProperty()
-    note = FloatProperty(default=0.0)
+    origine = StringProperty() 
+    note = FloatProperty(default=0.0)  # Note moyenne
+    total_notes = IntegerProperty(default=0)  # Nombre de notes reçues
+    somme_notes = IntegerProperty(default=0)  # Somme des notes pour calculer la moyenne
     description = StringProperty()
     images = JSONProperty()
     nombre_personnes = IntegerProperty()
