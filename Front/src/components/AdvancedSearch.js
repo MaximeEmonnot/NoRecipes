@@ -81,7 +81,7 @@ const AdvancedSearch = ({ onSearch }) => {
                     </select>
                 </div>
 
-                {/* Par note 
+                {/* Par note */}
                 <div className="form-group">
                     <label>Par note :</label>
                     <input
@@ -94,7 +94,7 @@ const AdvancedSearch = ({ onSearch }) => {
                         max="5"
                         step="0.1"
                     />
-                </div> */}
+                </div> 
 
                 <button type="submit" className="search-button">Rechercher</button>
             </form>

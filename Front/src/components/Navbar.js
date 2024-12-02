@@ -74,6 +74,7 @@ const Navbar = () => {
                 <div className="dropdown-menu">
                     <ul>
                         <li><Link to="#">Recettes populaires</Link></li>
+                        <li><Link to="#">Recettes les mieux notées</Link></li>
                         <li>Recettes par catégories
                             <ul>
                                 <li><Link to="#">Apéritifs</Link></li>
