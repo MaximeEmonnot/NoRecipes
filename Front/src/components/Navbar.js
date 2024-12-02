@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import '../styles/Navbar.css';
 import logo from '../images/LogoSite.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBars, faSearch, faUser, faFilter } from '@fortawesome/free-solid-svg-icons';
+import { faBars, faSearch, faFilter } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 import AdvancedSearch from './AdvancedSearch'; 
 
@@ -11,19 +11,16 @@ const Navbar = () => {
     const [searchOpen, setSearchOpen] = useState(false); 
     const [searchQuery, setSearchQuery] = useState(''); 
 
-  
     const toggleMenu = () => {
         setMenuOpen(!menuOpen);
     };
 
-    
     const toggleSearch = () => {
         setSearchOpen(!searchOpen);
     };
 
     // Fonction pour gérer la recherche
     const handleSearch = () => {
-       
         console.log('Recherche effectuée pour:', searchQuery);
     };
 
@@ -41,35 +38,31 @@ const Navbar = () => {
                 </Link>
             </div>
 
-            {/* Barre de recherche */}
-            <div className="search-container">
-                <input 
-                    type="text" 
-                    className="search-input" 
-                    placeholder="Rechercher une recette..." 
-                    value={searchQuery} 
-                    onChange={(e) => setSearchQuery(e.target.value)} 
-                />
-                {/* Icône de recherche cliquable */}
-                <button className="search-icon" onClick={handleSearch}>
-                    <FontAwesomeIcon icon={faSearch} />
-                </button>
-            </div>
+            {/* Conteneur pour la recherche et le bouton Filtrer */}
+            <div className="search-filter-container">
+                {/* Barre de recherche */}
+                <div className="search-container">
+                    <input 
+                        type="text" 
+                        className="search-input" 
+                        placeholder="Rechercher une recette..." 
+                        value={searchQuery} 
+                        onChange={(e) => setSearchQuery(e.target.value)} 
+                    />
+                    {/* Icône de recherche cliquable */}
+                    <button className="search-icon" onClick={handleSearch}>
+                        <FontAwesomeIcon icon={faSearch} />
+                    </button>
+                </div>
 
-            {/* Icône de filtre */}
-            <div className="advanced-search-container">
-                <button className="filter-icon" onClick={toggleSearch}>
-                    <FontAwesomeIcon icon={faFilter} />
-                    Filtrer
-                </button>
+                {/* Icône de filtre */}
+                <div className="advanced-search-container">
+                    <button className="filter-icon" onClick={toggleSearch}>
+                        <FontAwesomeIcon icon={faFilter} />
+                        Filtrer
+                    </button>
+                </div>
             </div>
-
-            {/* Bouton de connexion */}
-            <Link to="/form" className="connexion-button">
-                <span className="user-icon">
-                    <FontAwesomeIcon icon={faUser} />
-                </span> Connexion
-            </Link>
 
             {/* Affiche le composant de recherche avancée*/}
             {searchOpen && <AdvancedSearch />}

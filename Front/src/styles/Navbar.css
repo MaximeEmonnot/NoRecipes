@@ -11,11 +11,13 @@
   top: 0;
   left: 0;
   z-index: 100;
+  gap: 10px; 
 }
 
 .navbar-left {
   display: flex;
   align-items: center;
+  margin-right: auto; 
 }
 
 .menu-icon {
@@ -31,6 +33,14 @@
   height: 60px;
   width: 70px;
   margin-right: 20px;
+}
+
+/* Conteneur combiné pour la recherche et le filtre */
+.search-filter-container {
+  display: flex;
+  align-items: center;
+  gap: 10px; 
+  margin-right: 350px;
 }
 
 .search-container {
@@ -62,19 +72,18 @@
   padding: 0;
 }
 
+/* Style pour le bouton de filtre */
 .advanced-search-container {
   display: flex;
-  align-items: left; 
-  margin-left: 0; 
+  align-items: center; 
 }
 
 .filter-icon {
   background: none;
   border: none;
   color: #32A632;
-  font-size: 20px;
+  font-size: 18px;
   cursor: pointer;
-  margin-left: 0; 
   display: flex;
   align-items: center;
 }
@@ -84,33 +93,16 @@
 }
 
 
-.connexion-button {
-  background-color: #32A632;
-  color: white; 
-  padding: 8px 16px;
-  border: none;
-  border-radius: 20px;
-  font-size: 16px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  font-weight: bold;
+.filter-icon:hover {
+  color: #28a028;
 }
 
-.user-icon {
-  margin-right: 5px;
-  font-size: 18px;
-  color: #ffffff;
-}
 
 .navbar-logo-link {
   text-decoration: none;
 }
 
-.connexion-button {
-  text-decoration: none;
-  color: white;
-}
+
 
 /* Menu déroulant */
 .dropdown-menu {

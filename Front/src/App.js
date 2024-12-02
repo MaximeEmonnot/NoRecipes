@@ -2,7 +2,6 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import HomePage from './pages/HomePage';
-import FormPage from './pages/FormPage'; 
 import Footer from './components/Footer';
 import './App.css'; 
 import AddRecipe from './components/recipes/AddRecipe';
@@ -17,7 +16,6 @@ const App = () => {
             <Navbar />
             <Routes>
                 <Route path="/" element={<HomePage />} /> 
-                <Route path="/form" element={<FormPage />} />
                 <Route path='/AddRecipe' element={<AddRecipe />}/>
                 <Route path='/AddIngredient' element={<AddIngredient />}/>
                 <Route path='/AddUtensil' element={<AddUtensil />}/>

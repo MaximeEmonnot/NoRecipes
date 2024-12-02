@@ -18,38 +18,38 @@ const HomePage = () => {
             <section className="recipe-cards">
             <RecipeCard
                     title="Apéritifs"
-                    description="Découvrez nos recettes d'apéritifs."
+                    description="Mes recettes d'apéritifs."
                     imgSrc={aperitifImage}
                     color="#FFFFFF"
                 />
                 <RecipeCard
                     title="Entrées"
-                    description="Découvrez nos recettes d'entrées."
+                    description="Mes recettes d'entrées."
                     imgSrc={entreeImage}
                     color="#FFFFFF"
                 />
                 <RecipeCard
                     title="Plats"
-                    description="Découvrez nos recettes de plats."
+                    description="Mes recettes de plats."
                     imgSrc={dinnerImage}
                     color="#FFFFFF"
                 />
                 <RecipeCard
                     title="Petit-déjeuner"
-                    description="Découvrez nos recettes de petit-déjeuner."
+                    description="Mes recettes de petit-déjeuner."
                     imgSrc={breakfastImage}
                     color="#FFFFFF"
                 />
                 <RecipeCard
                     title="Desserts"
-                    description="Découvrez nos recettes de desserts."
+                    description="Mes recettes de desserts."
                     imgSrc={dessertImage}
                     color="#FFFFFF"
                 />
                 
                 <RecipeCard
                     title="Boissons"
-                    description="Découvrez nos recettes de boissons."
+                    description="Mes recettes de boissons."
                     imgSrc={boissonsImage}
                     color="#FFFFFF"
                 />
