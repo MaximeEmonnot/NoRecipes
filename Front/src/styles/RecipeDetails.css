@@ -1,0 +1,71 @@
+.recipe-details {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding-top: 50%;
+}
+
+
+/* Conteneur général */
+.image-container {
+    margin-bottom: 20px;
+    border-radius: 8px;
+}
+
+/* Style du carrousel */
+.carousel {
+    display: flex;
+    overflow-x: auto;
+    gap: 10px;
+    scroll-snap-type: x mandatory;
+    border-radius: 8px;
+}
+
+.carousel-item {
+    flex: none;
+    scroll-snap-align: center;
+    width: 100%;
+    max-height: 400px;
+}
+
+.carousel-item img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
+/* Style pour une image unique */
+.single-image img {
+    width: 100%;
+    max-height: 400px;
+    height: auto;
+    border-radius: 8px;
+    display: block;
+}
+
+.recipe-details h1{
+    font-size: 1.5em;
+    margin: 15px 0;
+    color: #333;
+    text-align: center;
+}
+
+.ingredients-list, .utensils-list, .comments-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.ingredient-card, .utensil-card, .comment-card {
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+.comments-section, .utensils-section, .ingredients-section {
+    margin-top: 20px;
+}

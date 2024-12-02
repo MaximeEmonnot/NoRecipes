@@ -4,6 +4,7 @@ from django.views.decorators.csrf import csrf_exempt
 from databaseTest.models import Recipe
 import json
 import os
+from neomodel import Q
 
 from utils import RunCypher, GetDataFromNode
 
@@ -28,6 +29,100 @@ def get_all_recipes(request):
             for recipe in recipes
         ]
         return JsonResponse({"recipes": data}, safe=False)
+
+# Récupération de recette par recherche simple
+@csrf_exempt
+def get_recipe_by_simple_search(request, search):
+    if request.method == "GET" :
+        try:
+            recipe = Recipe.nodes.filter(
+                  Q(titre__icontains=search)
+                | Q(origine__icontains=search)
+                | Q(description__icontains=search)
+            )
+
+            data = {
+                "titre": recipe.titre,
+                "origine": recipe.origine,
+                "note": recipe.note,
+                "description": recipe.description,
+                "images": recipe.images,
+                "nombre_personnes": recipe.nombre_personnes,
+                "temps_preparation": recipe.temps_preparation,
+                "temps_cuisson": recipe.temps_cuisson,
+                "temps_repos": recipe.temps_repos
+            }
+            
+            return JsonResponse({"recipe": data})
+        except Recipe.DoesNotExist:
+            return JsonResponse({"error" : "Recette non trouvée"}, status = 404)
+
+# Récupération de recette par recherche avancée
+@csrf_exempt
+def get_recipe_by_advanced_search(request):
+    if request.method == "GET":
+        try:
+            search          = request.GET.get("search")
+            ingredient_list = request.GET.get("ingredient_list")
+            cuisine_type    = request.GET.get("cuisine_type")
+            origin          = request.GET.get("origin")
+            min_rate        = request.GET.get("min_rate")
+            
+            # Construction du path Ingredient
+            ingredient_query = ""
+            for ingredient in ingredient_list.split(","):
+                ingredient_query += f", (r)-[CONTIENT]->(:Ingredient{{titre:{ingredient}}})"
+                
+            # Construction du path type de cuisine
+            cuisine_type_query = ""
+            if(cuisine_type):
+                cuisine_type_query = f", (r)-[APPARTIENT_A]->(:Category{{titre:{cuisine_type}}})"
+                
+            query = "MATCH (r:Recipe)" 
+            + ingredient_query 
+            + cuisine_type_query
+            + f"WHERE r.origine = {origin} AND r.note >= {min_rate} AND r.titre CONTAINS {search}"
+                
+            answer, summary, keys = RunCypher(query)
+            
+            data = [GetDataFromNode(record) for record in answer]
+            
+            return JsonResponse({"recipes": data})
+        except Recipe.DoesNotExist:
+            return JsonResponse({"error" : "Recette non trouvée"}, status = 404)
+
+# Récupération des recherches correspondant à la recherche en cours (recommandation)
+@csrf_exempt
+def get_recommanded_recipes(request):
+    if request.method == "GET":
+        try:
+            ingredient_list = request.GET.get("ingredient_list")
+            cuisine_type    = request.GET.get("cuisine_type")
+            origin          = request.GET.get("origin")
+            
+            # Construction du path Ingredient
+            ingredient_query = ""
+            for ingredient in ingredient_list.split(","):
+                ingredient_query += f"OPTIONAL MATCH (r)-[CONTIENT]->(:Ingredient{{titre:{ingredient}}})"
+                
+            # Construction du path type de cuisine
+            cuisine_type_query = ""
+            if(cuisine_type):
+                cuisine_type_query = f"OPTIONAL MATCH (r)-[APPARTIENT_A]->(:Category{{titre:{cuisine_type}}})"
+                
+            query = "MATCH (r:Recipe)" 
+            + ingredient_query 
+            + cuisine_type_query
+            + f"WHERE r.origine = {origin}"
+            + "ORDER BY r.note DESC"
+                
+            answer, summary, keys = RunCypher(query)
+            
+            data = [GetDataFromNode(record) for record in answer]
+            
+            return JsonResponse({"recipes": data})
+        except Recipe.DoesNotExist:
+            return JsonResponse({"error" : "Recette non trouvée"}, status = 404)
 
 # Récupération de recette par le titre
 @csrf_exempt

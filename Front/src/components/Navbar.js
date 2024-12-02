@@ -22,6 +22,8 @@ const Navbar = () => {
     // Fonction pour gérer la recherche
     const handleSearch = () => {
         console.log('Recherche effectuée pour:', searchQuery);
+
+        
     };
 
     return (
