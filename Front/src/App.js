@@ -10,6 +10,7 @@ import AddIngredient from './components/Ingredients/AddIngredient';
 import AddUtensil from './components/Ustensiles/AddUtensil';
 import AddCategory from './components/Catégories/AddCategory';
 import RecipeList from './components/recipes/AllRecipes';
+import RecipeDetails from './components/recipes/RecipeDetails';
 
 const App = () => {
     return (
@@ -22,7 +23,8 @@ const App = () => {
                 <Route path='/AddIngredient' element={<AddIngredient />}/>
                 <Route path='/AddUtensil' element={<AddUtensil />}/>
                 <Route path='/AddCategory' element={<AddCategory />}/>
-                <Route path='/AllRecipes' element={<RecipeList />}/>
+                <Route path='/AllRecipes/category/:title' element={<RecipeList />}/>
+                <Route path='/RecipeDetails/:title' element={<RecipeDetails />}/>
             </Routes>
             <Footer />
         </Router>
