@@ -73,7 +73,7 @@ def get_recipe_by_advanced_search(request, search, ingredient_list, cuisine_type
             if(cuisine_type):
                 cuisine_type_query = f", (r)-[APPARTIENT_A]->(:Category{{titre:{cuisine_type}}})"
                 
-            query = "MATCH (r)" 
+            query = "MATCH (r:Recipe)" 
             + ingredient_query 
             + cuisine_type_query
             + f"WHERE r.origine = {origin} AND r.note >= {min_rate} AND r.titre CONTAINS {search}"
@@ -85,7 +85,36 @@ def get_recipe_by_advanced_search(request, search, ingredient_list, cuisine_type
             return JsonResponse({"recipes": data})
         except Recipe.DoesNotExist:
             return JsonResponse({"error" : "Recette non trouvée"}, status = 404)
-        
+
+# Récupération des recherches correspondant à la recherche en cours (recommandation)
+@csrf_exempt
+def get_recommanded_recipes(request, ingredient_list, cuisine_type, origin):
+    if request.method == "GET":
+        try:
+            
+            # Construction du path Ingredient
+            ingredient_query = ""
+            for ingredient in ingredient_list.split(","):
+                ingredient_query += f"OPTIONAL MATCH (r)-[CONTIENT]->(:Ingredient{{titre:{ingredient}}})"
+                
+            # Construction du path type de cuisine
+            cuisine_type_query = ""
+            if(cuisine_type):
+                cuisine_type_query = f"OPTIONAL MATCH (r)-[APPARTIENT_A]->(:Category{{titre:{cuisine_type}}})"
+                
+            query = "MATCH (r:Recipe)" 
+            + ingredient_query 
+            + cuisine_type_query
+            + f"WHERE r.origine = {origin}"
+            + "ORDER BY r.note DESC"
+                
+            answer, summary, keys = RunCypher(query)
+            
+            data = [GetDataFromNode(record) for record in answer]
+            
+            return JsonResponse({"recipes": data})
+        except Recipe.DoesNotExist:
+            return JsonResponse({"error" : "Recette non trouvée"}, status = 404)
 
 # Récupération de recette par le titre
 @csrf_exempt
