@@ -59,9 +59,14 @@ def get_recipe_by_simple_search(request, search):
 
 # Récupération de recette par recherche avancée
 @csrf_exempt
-def get_recipe_by_advanced_search(request, search, ingredient_list, cuisine_type, origin, min_rate):
+def get_recipe_by_advanced_search(request):
     if request.method == "GET":
         try:
+            search          = request.GET.get("search")
+            ingredient_list = request.GET.get("ingredient_list")
+            cuisine_type    = request.GET.get("cuisine_type")
+            origin          = request.GET.get("origin")
+            min_rate        = request.GET.get("min_rate")
             
             # Construction du path Ingredient
             ingredient_query = ""
@@ -88,9 +93,12 @@ def get_recipe_by_advanced_search(request, search, ingredient_list, cuisine_type
 
 # Récupération des recherches correspondant à la recherche en cours (recommandation)
 @csrf_exempt
-def get_recommanded_recipes(request, ingredient_list, cuisine_type, origin):
+def get_recommanded_recipes(request):
     if request.method == "GET":
         try:
+            ingredient_list = request.GET.get("ingredient_list")
+            cuisine_type    = request.GET.get("cuisine_type")
+            origin          = request.GET.get("origin")
             
             # Construction du path Ingredient
             ingredient_query = ""
