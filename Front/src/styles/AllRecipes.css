@@ -1,0 +1,28 @@
+.all-recipes-container {
+  background-color: white;
+  padding-top: 30%;
+  margin-top: 60px;
+}
+
+.all-recipes-container h2{
+  font-size: 1.5em;
+  margin: 15px 0;
+  color: #333;
+  text-align: center;
+}
+
+.hero-section p {
+  font-size: 1.2em;
+  margin-bottom: 20px;
+}
+
+/* Section des cartes de recettes */
+.recipe-cards {
+  display: flex;
+  justify-content: space-around;
+  margin: 40px auto;
+  max-width: 1200px;
+  padding: 20px;
+  gap: 20px;
+  flex-wrap: wrap;
+}

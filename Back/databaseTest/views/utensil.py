@@ -3,6 +3,7 @@ from django.http.response import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from databaseTest.models import Utensil
 import json
+import os
 
 from utils import RunCypher, GetDataFromNode
 
@@ -42,35 +43,46 @@ def get_utensil_by_title(request, title):
 @csrf_exempt
 def add_utensil(request):
     if request.method == "POST":
-        try:
-            data = json.loads(request.body)
+        try: 
+            titre = request.POST.get("titre")
+            prix = request.POST.get("prix")
+            description = request.POST.get("description")
+            
+            if not all([titre, prix, description]):
+                return JsonResponse({"error": "Tous les champs sont requis."}, status=400)
 
-            if not isinstance(data, dict):
-                return JsonResponse({"error": "Le format est incorrect"}, status=400)
+            ustensile = Utensil(
+                titre=titre,
+                prix=prix,
+                description=description
+            )
+            ustensile.save()
 
-        except json.JSONDecodeError:
-            return JsonResponse({"error": "Données invalides."}, status=400)
+            # Gestion des fichiers (images)
+            images = request.FILES.getlist("images")  
+            image_urls = []
 
+            # Chemin vers le répertoire media
+            media_path = "media/ustensile"
+            if not os.path.exists(media_path): 
+                os.makedirs(media_path)
 
-        #data = request.POST a utilisé quand le front end sera coder 
+            for image in images:
+                image_name = f"ustensile/{image.name}"
+                image_urls.append(image_name)
 
-        titre = data.get("titre")
-        prix = data.get("prix")
-        description = data.get("description")
-        images = data.get("images", "[]")  
-        
-        if not all([titre, prix, description]):
-            return JsonResponse({"error": "Tous les champs sont requis."}, status=400)
+                with open(f"media/{image_name}", "wb+") as destination:
+                    for chunk in image.chunks():
+                        destination.write(chunk)
 
-        ustensile = Utensil(
-            titre=titre,
-            prix=prix,
-            description=description,
-            images=images
-        )
-        ustensile.save()
+            # Ajout des images de l'ustensile
+            ustensile.images = image_urls
+            ustensile.save()
 
-        return JsonResponse({"message": "Ustensile créé avec succès", "ustensile_id": ustensile.element_id})
+            return JsonResponse({"message": "Ustensile créé avec succès", "ustensile_id": ustensile.element_id})
+
+        except Exception as e:
+            return JsonResponse({"error": f"Erreur lors de la création de l'ustenisle : {str(e)}"}, status=500)
 
 # Modification ustensile
 @csrf_exempt

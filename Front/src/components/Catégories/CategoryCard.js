@@ -1,5 +1,5 @@
 import React from 'react';
-import '../styles/RecipeCard.css';
+import '../../styles/CategoryCard.css';
 
 const RecipeCard = ({ title, description, imgSrc, color }) => {
     return (

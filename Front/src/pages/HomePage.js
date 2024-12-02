@@ -1,5 +1,5 @@
 import React from 'react';
-import RecipeCard from '../components/RecipeCard';
+import RecipeCard from '../components/Catégories/CategoryCard';
 import '../styles/HomePage.css';
 import breakfastImage from '../images/breakfast.jpg';
 import dessertImage from '../images/dessert.jpg';

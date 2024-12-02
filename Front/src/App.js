@@ -5,6 +5,11 @@ import HomePage from './pages/HomePage';
 import FormPage from './pages/FormPage'; 
 import Footer from './components/Footer';
 import './App.css'; 
+import AddRecipe from './components/recipes/AddRecipe';
+import AddIngredient from './components/Ingredients/AddIngredient';
+import AddUtensil from './components/Ustensiles/AddUtensil';
+import AddCategory from './components/Catégories/AddCategory';
+import RecipeList from './components/recipes/AllRecipes';
 
 const App = () => {
     return (
@@ -13,6 +18,11 @@ const App = () => {
             <Routes>
                 <Route path="/" element={<HomePage />} /> 
                 <Route path="/form" element={<FormPage />} />
+                <Route path='/AddRecipe' element={<AddRecipe />}/>
+                <Route path='/AddIngredient' element={<AddIngredient />}/>
+                <Route path='/AddUtensil' element={<AddUtensil />}/>
+                <Route path='/AddCategory' element={<AddCategory />}/>
+                <Route path='/AllRecipes' element={<RecipeList />}/>
             </Routes>
             <Footer />
         </Router>

@@ -3,6 +3,7 @@ from django.http.response import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from databaseTest.models import Recipe
 import json
+import os
 
 from utils import RunCypher, GetDataFromNode
 
@@ -10,6 +11,7 @@ from utils import RunCypher, GetDataFromNode
 @csrf_exempt
 def get_all_recipes(request):
     if request.method == "GET":
+        print("Requête reçue pour récupérer les recettes")  
         recipes = Recipe.nodes.all()
         data = [
             {
@@ -52,48 +54,54 @@ def get_recipe_by_title(request, title):
 @csrf_exempt
 def add_recipe(request):
     if request.method == "POST":
-        try:
-            data = json.loads(request.body)
-            # Vérification si data est un dictionnaire et pas une liste pour bien gérer la liste des images
-            if not isinstance(data, dict):
-                return JsonResponse({"error": "Le format est incorrect"}, status=400)
+        try: 
+            titre = request.POST.get("titre")
+            origine = request.POST.get("origine")
+            description = request.POST.get("description")
+            nombre_personnes = int(request.POST.get("nombrePersonnes", 1))
+            temps_preparation = int(request.POST.get("tempsPreparation", 0))
+            temps_cuisson = int(request.POST.get("tempsCuisson", 0))
+            temps_repos = int(request.POST.get("tempsRepos", 1))
+            
+            if not all([titre, origine, description, temps_preparation, temps_cuisson, nombre_personnes]):
+                return JsonResponse({"error": "Tous les champs sont requis."}, status=400)
 
-        except json.JSONDecodeError:
-            return JsonResponse({"error": "Données invalides."}, status=400)
+            recipe = Recipe(
+                titre=titre,
+                origine=origine,
+                description=description,
+                nombre_personnes=nombre_personnes,
+                temps_preparation=temps_preparation,
+                temps_cuisson=temps_cuisson,
+                temps_repos=temps_repos
+            )
+            recipe.save()
 
+              # Gestion des fichiers (images)
+            images = request.FILES.getlist("images")  
+            image_urls = []
 
-        #data = request.POST a utilisé quand le front end sera coder
+            # Chemin vers le répertoire media
+            media_path = "media/recipes"
+            if not os.path.exists(media_path): 
+                os.makedirs(media_path)
 
-        titre = data.get("titre")
-        origine = data.get("origine")
-        description = data.get("description")
-        nombre_personnes = int(data.get("nombrePersonnes", 1))
-        temps_preparation = int(data.get("tempsPreparation", 0))
-        temps_cuisson = int(data.get("tempsCuisson", 0))
-        temps_repos = int(data.get("tempsRepos", 1))
+            for image in images:
+                image_name = f"recipes/{image.name}"
+                image_urls.append(image_name)
 
-        images = data.get("images", "[]")  
-        
-        if not all([titre, origine, description, temps_preparation, temps_cuisson, nombre_personnes]):
-            return JsonResponse({"error": "Tous les champs sont requis."}, status=400)
+                with open(f"media/{image_name}", "wb+") as destination:
+                    for chunk in image.chunks():
+                        destination.write(chunk)
 
-        """existing_recipe = Recipe.nodes.filter(titre=titre).first()
-        if existing_recipe is not None:
-            return JsonResponse({"error": "Une recette avec ce titre existe déjà."}, status=400)"""
+            # Ajout des images à la recette
+            recipe.images = image_urls
+            recipe.save()
 
-        recipe = Recipe(
-            titre=titre,
-            origine=origine,
-            description=description,
-            nombre_personnes=nombre_personnes,
-            temps_preparation=temps_preparation,
-            temps_cuisson=temps_cuisson,
-            temps_repos=temps_repos,
-            images=images
-        )
-        recipe.save()
+            return JsonResponse({"message": "Recette créée avec succès", "recipe_id": recipe.element_id})
 
-        return JsonResponse({"message": "Recette créée avec succès", "recipe_id": recipe.element_id})
+        except Exception as e:
+            return JsonResponse({"error": f"Erreur lors de la création de la recette : {str(e)}"}, status=500)
 
 # Modification recette
 @csrf_exempt

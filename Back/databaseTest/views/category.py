@@ -3,6 +3,7 @@ from django.http.response import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from databaseTest.models import Category
 import json
+import os 
 
 from utils import RunCypher, GetDataFromNode
 
@@ -38,31 +39,42 @@ def get_category_by_title(request, title):
 @csrf_exempt
 def add_category(request):
     if request.method == "POST":
-        try:
-            data = json.loads(request.body)
-            # Vérification si data est un dictionnaire et pas une liste pour bien gérer la liste des images
-            if not isinstance(data, dict):
-                return JsonResponse({"error": "Le format est incorrect"}, status=400)
+        try: 
+            titre = request.POST.get("titre")
+            
+            if not titre:
+                return JsonResponse({"error": "Il faut un titre pour la catégorie."}, status=400)
 
-        except json.JSONDecodeError:
-            return JsonResponse({"error": "Données invalides."}, status=400)
+            category = Category(
+                titre=titre
+            )
+            category.save()
 
+            # Gestion des fichiers (images)
+            images = request.FILES.getlist("images")  
+            image_urls = []
 
-        #data = request.POST a utilisé quand le front end sera coder 
+            # Chemin vers le répertoire media
+            media_path = "media/catégories"
+            if not os.path.exists(media_path): 
+                os.makedirs(media_path)
 
-        titre = data.get("titre")
-        images = data.get("images", "[]")  
-        
-        if not titre:
-            return JsonResponse({"error": "Le titre est obligatoire."}, status=400)
+            for image in images:
+                image_name = f"catégories/{image.name}"
+                image_urls.append(image_name)
 
-        category = Category(
-            titre=titre,
-            images=images
-        )
-        category.save()
+                with open(f"media/{image_name}", "wb+") as destination:
+                    for chunk in image.chunks():
+                        destination.write(chunk)
 
-        return JsonResponse({"message": "Catégorie créée avec succès", "category_id": category.element_id})
+            # Ajout des images de l'ingrédient
+            category.images = image_urls
+            category.save()
+
+            return JsonResponse({"message": "Catégorie créée avec succès", "category_id": category.element_id})
+
+        except Exception as e:
+            return JsonResponse({"error": f"Erreur lors de la création de la catégorie : {str(e)}"}, status=500)
 
 # Modification catégorie
 @csrf_exempt
