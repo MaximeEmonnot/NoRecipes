@@ -4,6 +4,7 @@ from django.views.decorators.csrf import csrf_exempt
 from databaseTest.models import Recipe
 import json
 import os
+from neomodel import Q
 
 from utils import RunCypher, GetDataFromNode
 
@@ -28,6 +29,33 @@ def get_all_recipes(request):
             for recipe in recipes
         ]
         return JsonResponse({"recipes": data}, safe=False)
+
+# Récupération de recette par recherche simple
+@csrf_exempt
+def get_recipe_by_simple_search(request, search):
+    if request.method == "GET" :
+        try:
+            recipe = Recipe.nodes.filter(
+                  Q(titre__icontains=search)
+                | Q(origine__icontains=search)
+                | Q(description__icontains=search)
+            )
+
+            data = {
+                "titre": recipe.titre,
+                "origine": recipe.origine,
+                "note": recipe.note,
+                "description": recipe.description,
+                "images": recipe.images,
+                "nombre_personnes": recipe.nombre_personnes,
+                "temps_preparation": recipe.temps_preparation,
+                "temps_cuisson": recipe.temps_cuisson,
+                "temps_repos": recipe.temps_repos
+            }
+            
+            return JsonResponse({"recipe": data})
+        except Recipe.DoesNotExist:
+            return JsonResponse({"error" : "Recette non trouvée"}, status = 404)
 
 # Récupération de recette par le titre
 @csrf_exempt
