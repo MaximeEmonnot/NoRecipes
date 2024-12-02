@@ -7,5 +7,4 @@ neo4j==5.19.0
 neo4j-driver==5.25.0
 pytz==2024.2
 sqlparse==0.5.1
-django_neomodel==5.3.3
 django_neomodel==0.2.0
