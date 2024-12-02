@@ -71,12 +71,12 @@ def get_recipe_by_advanced_search(request):
             # Construction du path Ingredient
             ingredient_query = ""
             for ingredient in ingredient_list.split(","):
-                ingredient_query += f", (r)-[CONTIENT]->(:Ingredient{{titre:{ingredient}}})"
+                ingredient_query += f", (r)-[:CONTIENT]->(:Ingredient{{titre:{ingredient}}})"
                 
             # Construction du path type de cuisine
             cuisine_type_query = ""
             if(cuisine_type):
-                cuisine_type_query = f", (r)-[APPARTIENT_A]->(:Category{{titre:{cuisine_type}}})"
+                cuisine_type_query = f", (r)-[:APPARTIENT_A]->(:Category{{titre:{cuisine_type}}})"
                 
             query = "MATCH (r:Recipe)" 
             + ingredient_query 
@@ -103,12 +103,12 @@ def get_recommanded_recipes(request):
             # Construction du path Ingredient
             ingredient_query = ""
             for ingredient in ingredient_list.split(","):
-                ingredient_query += f"OPTIONAL MATCH (r)-[CONTIENT]->(:Ingredient{{titre:{ingredient}}})"
+                ingredient_query += f"OPTIONAL MATCH (r)-[:CONTIENT]->(:Ingredient{{titre:{ingredient}}})"
                 
             # Construction du path type de cuisine
             cuisine_type_query = ""
             if(cuisine_type):
-                cuisine_type_query = f"OPTIONAL MATCH (r)-[APPARTIENT_A]->(:Category{{titre:{cuisine_type}}})"
+                cuisine_type_query = f"OPTIONAL MATCH (r)-[:APPARTIENT_A]->(:Category{{titre:{cuisine_type}}})"
                 
             query = "MATCH (r:Recipe)" 
             + ingredient_query 
