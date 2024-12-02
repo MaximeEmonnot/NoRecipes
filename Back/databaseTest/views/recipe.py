@@ -76,7 +76,7 @@ def get_recipe_by_advanced_search(request, search, ingredient_list, cuisine_type
             query = "MATCH (r)" 
             + ingredient_query 
             + cuisine_type_query
-            + f"WHERE r.origine = {origin} AND r.note >= {min_rate}"
+            + f"WHERE r.origine = {origin} AND r.note >= {min_rate} AND r.titre CONTAINS {search}"
                 
             answer, summary, keys = RunCypher(query)
             
