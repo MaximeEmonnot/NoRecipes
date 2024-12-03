@@ -7,6 +7,10 @@ Réalisé par :
 - Maxime EMONNOT
 - Maimouna TIMERA
 
+## Objectif du projet
+
+Concevoir une solution efficace pour gérer ces données interconnectées tout en faisant une prise en main de Neo4j et en exploitant ses capacités.
+
 ## Choix technologiques
 
 | Back-end | Front-end | Base de données |
@@ -14,20 +18,16 @@ Réalisé par :
 | Django   | React     | Neo4J           |
 
 
-## Structure du projet
+## Récupération des données
 
-**TODO**
+Le fichier Cypher, contenant les scripts nécessaires pour alimenter la base de données Neo4j, est disponible dans le répertoire suivant :
+Back/databaseTest/Données.
 
-## Objectif du projet
+Note : Ce fichier doit être exécuté dans Neo4j pour initialiser les données avant de lancer l'application.
 
-**TODO**
+## Pour lancer l'application 
+Exécuter la commande "npm start" dans un terminal intégré, à partir du répertoire front.
 
-## Conventions 
 
-### Convention de nommage
 
-**TODO**
 
-### Convention de style
-
-**TODO**
