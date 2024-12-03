@@ -35,13 +35,14 @@ def get_all_recipes(request):
 def get_recipe_by_simple_search(request, search):
     if request.method == "GET" :
         try:
-            recipe = Recipe.nodes.filter(
+            recipes = Recipe.nodes.filter(
                   Q(titre__icontains=search)
                 | Q(origine__icontains=search)
                 | Q(description__icontains=search)
             )
 
-            data = {
+            data = [
+                {
                 "titre": recipe.titre,
                 "origine": recipe.origine,
                 "note": recipe.note,
@@ -51,9 +52,11 @@ def get_recipe_by_simple_search(request, search):
                 "temps_preparation": recipe.temps_preparation,
                 "temps_cuisson": recipe.temps_cuisson,
                 "temps_repos": recipe.temps_repos
-            }
+                }
+                for recipe in recipes
+            ]
             
-            return JsonResponse({"recipe": data})
+            return JsonResponse({"recipes": data})
         except Recipe.DoesNotExist:
             return JsonResponse({"error" : "Recette non trouvée"}, status = 404)
 
