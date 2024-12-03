@@ -19,7 +19,7 @@ def get_all_categories(request):
             }
             for category in categories
         ]
-        return JsonResponse({"Catégories": data}, safe=False)
+        return JsonResponse({"categories": data}, safe=False)
 
 # Récupération catégorie par le titre
 @csrf_exempt
@@ -31,7 +31,7 @@ def get_category_by_title(request, title):
                "titre": category.titre,
                "images": category.images
             }
-            return JsonResponse({"Catégorie": data})
+            return JsonResponse({"categorie": data})
         except Category.DoesNotExist:
             return JsonResponse({"error": "Catégorie non trouvée"}, status=404)
 

@@ -1,94 +1,96 @@
-import React, { useState } from "react";
-import "../../styles/AddRecipe.css"
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { useNavigate, useParams } from "react-router-dom";
 
+const EditRecipe = () => {
+    const { title } = useParams(); // Récupère le titre de la recette depuis l'URL
+    const navigate = useNavigate();
 
-const AddRecipe = () => {
-    const [formData, setFormData] = useState({
-        titre: "",
+    const [recipeData, setRecipeData] = useState({
         origine: "",
         description: "",
-        tempsPreparation: "",
-        tempsCuisson: "",
-        nombrePersonnes: "",
-        images: [],
+        nombrePersonnes: 1,
+        tempsPreparation: 0,
+        tempsCuisson: 0,
     });
 
+    const [images, setImages] = useState([]);
+    const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [isLoading, setIsLoading] = useState(false); 
-    const navigate = useNavigate(); 
+
+    // Charger les données de la recette existante
+    useEffect(() => {
+        const fetchRecipe = async () => {
+            try {
+                const response = await axios.get(`http://localhost:8000/databaseTest/recipes/${title}`);
+                const recipe = response.data.recipe;
+                setRecipeData({
+                    origine: recipe.origine,
+                    description: recipe.description,
+                    nombrePersonnes: recipe.nombre_personnes,
+                    tempsPreparation: recipe.temps_preparation,
+                    tempsCuisson: recipe.temps_cuisson,
+                });
+                setLoading(false);
+            } catch (err) {
+                console.error("Erreur lors du chargement de la recette :", err);
+                setLoading(false);
+            }
+        };
+
+        fetchRecipe();
+    }, [title]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData({
-            ...formData,
+        setRecipeData((prevData) => ({
+            ...prevData,
             [name]: value,
-        });
+        }));
     };
 
     const handleFileChange = (e) => {
-        setFormData({ ...formData, images: e.target.files });
-      };
+        setImages(e.target.files);
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const formPayload = new FormData();
-        formPayload.append("titre", formData.titre);
-        formPayload.append("origine", formData.origine);
-        formPayload.append("description", formData.description);
-        formPayload.append("tempsPreparation", formData.tempsPreparation);
-        formPayload.append("tempsCuisson", formData.tempsCuisson);
-        formPayload.append("nombrePersonnes", formData.nombrePersonnes);
+        const formData = new FormData();
 
-        for (let i = 0; i < formData.images.length; i++) {
-            formPayload.append('images', formData.images[i]);
+        for (let key in recipeData) {
+            formData.append(key, recipeData[key]);
         }
+
+        Array.from(images).forEach((file) => {
+            formData.append("images", file);
+        });
 
         try {
-            setIsLoading(true); 
-            const response = await axios.post(
-              'http://localhost:8000/databaseTest/add_recipe',
-              formPayload,
-              {
+            await axios.put(`http://localhost:8000/databaseTest/recipes/update/${title}`, formData, {
                 headers: {
-                  'Content-Type': 'multipart/form-data', 
+                    "Content-Type": "multipart/form-data",
                 },
-              }
-            );
-      
-            if (response.status === 200) {
-                alert('Recette ajoutée avec succès');
-              navigate('/');
-            } else {
-              setError(response.data.error || 'Une erreur est survenue');
-            }
+            });
+
+            alert("Recette mise à jour avec succès !");
+
+            navigate(`/RecipeDetails/${title}`); 
         } catch (err) {
-            setError(err.response?.data?.error || 'Erreur réseau ou serveur');
-        } finally {
-            setIsLoading(false); 
+            console.error("Erreur lors de la mise à jour de la recette :", err);
+
+            alert("Erreur lors de la mise à jour de la recette.");
         }
     };
+
+    if (loading) return <div>Chargement...</div>;
 
     return (
         <div className="add-recipe-container">
             <form className="add-recipe-form" onSubmit={handleSubmit}>
-                <h2>Ajouter une Recette</h2>
+                <h2>Modifier la recette</h2>
                 {error && <div className="error-message">{error}</div>}
                 {isLoading && <div className="loading-message">Envoi en cours...</div>} 
-
-
-                <div className="form-group">
-                    <label htmlFor="titre">Titre</label>
-                    <input
-                        type="text"
-                        id="titre"
-                        name="titre"
-                        value={formData.titre}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
 
                 <div className="form-group">
                     <label htmlFor="origine">Origine</label>
@@ -96,7 +98,7 @@ const AddRecipe = () => {
                         type="text"
                         id="origine"
                         name="origine"
-                        value={formData.origine}
+                        value={recipeData.origine}
                         onChange={handleChange}
                     />
                 </div>
@@ -107,7 +109,7 @@ const AddRecipe = () => {
                         type="number"
                         id="tempsPreparation"
                         name="tempsPreparation"
-                        value={formData.tempsPreparation}
+                        value={recipeData.tempsPreparation}
                         onChange={handleChange}
                         required
                     />
@@ -119,7 +121,7 @@ const AddRecipe = () => {
                         type="number"
                         id="tempsCuisson"
                         name="tempsCuisson"
-                        value={formData.tempsCuisson}
+                        value={recipeData.tempsCuisson}
                         onChange={handleChange}
                         required
                     />
@@ -131,7 +133,7 @@ const AddRecipe = () => {
                         type="number"
                         id="nombrePersonnes"
                         name="nombrePersonnes"
-                        value={formData.nombrePersonnes}
+                        value={recipeData.nombrePersonnes}
                         onChange={handleChange}
                         required
                     />
@@ -142,7 +144,7 @@ const AddRecipe = () => {
                     <textarea
                         id="description"
                         name="description"
-                        value={formData.description}
+                        value={recipeData.description}
                         onChange={handleChange}
                         required
                     ></textarea>
@@ -160,11 +162,11 @@ const AddRecipe = () => {
                 </div>
 
                 <button type="submit" className="submit-button" disabled={isLoading}>
-                    {isLoading ? 'Ajout en cours...' : 'Ajouter'}
+                    {isLoading ? 'Modification en cours...' : 'Modifier'}
                 </button>
             </form>
         </div>
     );
 };
 
-export default AddRecipe;
+export default EditRecipe ;

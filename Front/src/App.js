@@ -12,6 +12,7 @@ import AddCategory from './components/Catégories/AddCategory';
 import RecipeList from './components/recipes/AllRecipes';
 import RecipeDetails from './components/recipes/RecipeDetails';
 import SimpleSearchRecipeList from './components/recipes/SimpleSearchRecipes';
+import EditRecipe from './components/recipes/EditRecipe';
 
 const App = () => {
     return (
@@ -21,6 +22,7 @@ const App = () => {
                 <Route path="/" element={<HomePage />} /> 
                 <Route path="/form" element={<FormPage />} />
                 <Route path='/AddRecipe' element={<AddRecipe />}/>
+                <Route path='/EditRecipe/:title' element={<EditRecipe />}/>
                 <Route path='/AddIngredient' element={<AddIngredient />}/>
                 <Route path='/AddUtensil' element={<AddUtensil />}/>
                 <Route path='/AddCategory' element={<AddCategory />}/>

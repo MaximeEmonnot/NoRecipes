@@ -49,8 +49,7 @@ def get_recipe_by_simple_search(request, search):
                 "images": recipe.images,
                 "nombre_personnes": recipe.nombre_personnes,
                 "temps_preparation": recipe.temps_preparation,
-                "temps_cuisson": recipe.temps_cuisson,
-                "temps_repos": recipe.temps_repos
+                "temps_cuisson": recipe.temps_cuisson
                 }
                 for recipe in recipes
             ]
@@ -157,7 +156,7 @@ def add_recipe(request):
             nombre_personnes = int(request.POST.get("nombrePersonnes", 1))
             temps_preparation = int(request.POST.get("tempsPreparation", 0))
             temps_cuisson = int(request.POST.get("tempsCuisson", 0))
-            
+
             if not all([titre, origine, description, temps_preparation, temps_cuisson, nombre_personnes]):
                 return JsonResponse({"error": "Tous les champs sont requis."}, status=400)
 
@@ -167,7 +166,7 @@ def add_recipe(request):
                 description=description,
                 nombre_personnes=nombre_personnes,
                 temps_preparation=temps_preparation,
-                temps_cuisson=temps_cuisson,
+                temps_cuisson=temps_cuisson
             )
             recipe.save()
 
@@ -203,23 +202,43 @@ def update_recipe(request, title):
     if request.method == "PUT":
         try:
             recipe = Recipe.nodes.get(titre=title)
-            data = json.loads(request.body)
-            
+
+            data = request.POST
             recipe.origine = data.get("origine", recipe.origine)
             recipe.description = data.get("description", recipe.description)
-            recipe.images = data.get("images", recipe.images)
             recipe.nombre_personnes = data.get("nombre_personnes", recipe.nombre_personnes)
             recipe.temps_preparation = data.get("temps_preparation", recipe.temps_preparation)
             recipe.temps_cuisson = data.get("temps_cuisson", recipe.temps_cuisson)
             
+             # Gestion des nouvelles images
+            images = request.FILES.getlist("images") 
+            if images:
+                image_urls = []
+
+                media_path = "media/recipes"
+                if not os.path.exists(media_path):
+                    os.makedirs(media_path)
+
+                for image in images:
+                    image_name = f"recipes/{image.name}"
+                    image_urls.append(image_name)
+
+                    with open(f"media/{image_name}", "wb+") as destination:
+                        for chunk in image.chunks():
+                            destination.write(chunk)
+
+                recipe.images = image_urls
+
             recipe.save()
-            
+
             return JsonResponse({"message": "Recette mise à jour avec succès"})
-        
+
         except Recipe.DoesNotExist:
             return JsonResponse({"error": "Recette non trouvée"}, status=404)
         except json.JSONDecodeError:
-            return JsonResponse({"error": "Données invalides"}, status=400)
+            return JsonResponse({"error": "Données invalides."}, status=400)
+        except Exception as e:
+            return JsonResponse({"error": f"Erreur lors de la mise à jour de la recette : {str(e)}"}, status=500)
 
 # Suppression recette
 @csrf_exempt
