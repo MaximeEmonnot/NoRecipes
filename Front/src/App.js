@@ -12,6 +12,8 @@ import AddCategory from './components/Catégories/AddCategory';
 import RecipeList from './components/recipes/AllRecipes';
 import RecipeDetails from './components/recipes/RecipeDetails';
 import SimpleSearchRecipeList from './components/recipes/SimpleSearchRecipes';
+
+
 import EditRecipe from './components/recipes/EditRecipe';
 
 const App = () => {
