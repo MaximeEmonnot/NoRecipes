@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import CategoryCard from '../components/Catégories/CategoryCard';
 import '../styles/HomePage.css';
 import breakfastImage from '../images/breakfast.jpg';
@@ -13,6 +13,7 @@ import axios from 'axios';
 
 const HomePage = () => {
     const { title } = useParams();
+    const navigate = useNavigate();
     const [categories, setCategory] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -43,6 +44,10 @@ const HomePage = () => {
   
       fetchRecipes();
     }, [title]);
+
+    const handleAddRecipe = () => {
+        navigate(`/AddRecipe`); 
+    };
   
     if (loading) {
       return <div>Chargement des catégories...</div>;
@@ -54,9 +59,12 @@ const HomePage = () => {
    
     return (
         <div className="home-page">
-                <div className="hero-section">
+            <div className="hero-section">
                 <img src={banner} alt="Bannière de recettes" className="banner-image" />
-                </div>
+            </div>
+            <div className="recipe-action-button">
+                <button onClick={handleAddRecipe} className="edit-recipe-button">Ajouter la recette</button>
+            </div>
             <section className="recipe-cards">
                 {categories.length > 0 ? (
                     categories.map((category, index) => {

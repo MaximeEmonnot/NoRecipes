@@ -42,3 +42,16 @@
     gap: 20px;
     flex-wrap: wrap;
 }
+
+.recipe-action-button {
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    margin-left: auto;
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+}
