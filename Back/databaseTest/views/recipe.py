@@ -23,8 +23,7 @@ def get_all_recipes(request):
                 "images": recipe.images,
                 "nombre_personnes": recipe.nombre_personnes,
                 "temps_preparation": recipe.temps_preparation,
-                "temps_cuisson": recipe.temps_cuisson,
-                "temps_repos": recipe.temps_repos
+                "temps_cuisson": recipe.temps_cuisson
             }
             for recipe in recipes
         ]
@@ -154,8 +153,7 @@ def get_recipe_by_title(request, title):
                 "images": recipe.images,
                 "nombre_personnes": recipe.nombre_personnes,
                 "temps_preparation": recipe.temps_preparation,
-                "temps_cuisson": recipe.temps_cuisson,
-                "temps_repos": recipe.temps_repos
+                "temps_cuisson": recipe.temps_cuisson
             }
             return JsonResponse({"recipe": data})
         except Recipe.DoesNotExist:
@@ -172,7 +170,6 @@ def add_recipe(request):
             nombre_personnes = int(request.POST.get("nombrePersonnes", 1))
             temps_preparation = int(request.POST.get("tempsPreparation", 0))
             temps_cuisson = int(request.POST.get("tempsCuisson", 0))
-            temps_repos = int(request.POST.get("tempsRepos", 1))
             
             if not all([titre, origine, description, temps_preparation, temps_cuisson, nombre_personnes]):
                 return JsonResponse({"error": "Tous les champs sont requis."}, status=400)
@@ -184,7 +181,6 @@ def add_recipe(request):
                 nombre_personnes=nombre_personnes,
                 temps_preparation=temps_preparation,
                 temps_cuisson=temps_cuisson,
-                temps_repos=temps_repos
             )
             recipe.save()
 
@@ -228,7 +224,6 @@ def update_recipe(request, title):
             recipe.nombre_personnes = data.get("nombre_personnes", recipe.nombre_personnes)
             recipe.temps_preparation = data.get("temps_preparation", recipe.temps_preparation)
             recipe.temps_cuisson = data.get("temps_cuisson", recipe.temps_cuisson)
-            recipe.nombre_personnes = data.get("temps_repos", recipe.temps_repos)
             
             recipe.save()
             

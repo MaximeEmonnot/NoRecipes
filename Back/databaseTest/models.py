@@ -58,7 +58,6 @@ class Recipe(StructuredNode):
     nombre_personnes = IntegerProperty()
     temps_preparation = IntegerProperty()
     temps_cuisson = IntegerProperty()
-    temps_repos = IntegerProperty()
 
     # Relation recette - catégorie
     categorie = RelationshipTo('Category', 'APPARTIENT_A')
