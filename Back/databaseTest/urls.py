@@ -18,6 +18,11 @@ urlpatterns = [
     path('recipes/<str:title>', get_recipe_by_title),
     path('recipes/update/<str:title>', update_recipe),
     path('recipes/delete/<str:title>', delete_recipe),
+    
+    #urls recherche/recommandation
+    path('simple_recipe_search/<str:search>', get_recipe_by_simple_search),
+    path('advanced_recipe_search/', get_recipe_by_advanced_search),
+    path('recommanded_recipes/', get_recommanded_recipes),
 
     #urls ingredients
     path('add_ingredient', add_ingredient), 

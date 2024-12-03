@@ -5,12 +5,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faSearch, faUser, faFilter } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 import AdvancedSearch from './AdvancedSearch'; 
+import { useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
     const [menuOpen, setMenuOpen] = useState(false); 
     const [searchOpen, setSearchOpen] = useState(false); 
     const [searchQuery, setSearchQuery] = useState(''); 
 
+    const navigate = useNavigate();
   
     const toggleMenu = () => {
         setMenuOpen(!menuOpen);
@@ -22,10 +24,12 @@ const Navbar = () => {
     };
 
     // Fonction pour gérer la recherche
-    const handleSearch = () => {
-        console.log('Recherche effectuée pour:', searchQuery);
-
-        
+    const handleSearch = async () => {
+        if(searchQuery.length != 0)
+        {
+            console.log('Recherche effectuée pour:', searchQuery);   
+            navigate(`/SimpleSearchRecipeList/${searchQuery}`);
+        }
     };
 
     return (

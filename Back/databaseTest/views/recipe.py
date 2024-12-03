@@ -34,13 +34,14 @@ def get_all_recipes(request):
 def get_recipe_by_simple_search(request, search):
     if request.method == "GET" :
         try:
-            recipe = Recipe.nodes.filter(
+            recipes = Recipe.nodes.filter(
                   Q(titre__icontains=search)
                 | Q(origine__icontains=search)
                 | Q(description__icontains=search)
             )
 
-            data = {
+            data = [
+                {
                 "titre": recipe.titre,
                 "origine": recipe.origine,
                 "note": recipe.note,
@@ -48,28 +49,36 @@ def get_recipe_by_simple_search(request, search):
                 "images": recipe.images,
                 "nombre_personnes": recipe.nombre_personnes,
                 "temps_preparation": recipe.temps_preparation,
-                "temps_cuisson": recipe.temps_cuisson
-            }
+                "temps_cuisson": recipe.temps_cuisson,
+                "temps_repos": recipe.temps_repos
+                }
+                for recipe in recipes
+            ]
             
-            return JsonResponse({"recipe": data})
+            return JsonResponse({"recipes": data})
         except Recipe.DoesNotExist:
             return JsonResponse({"error" : "Recette non trouvée"}, status = 404)
 
 # Récupération de recette par recherche avancée
 @csrf_exempt
-def get_recipe_by_advanced_search(request, search, ingredient_list, cuisine_type, origin, min_rate):
+def get_recipe_by_advanced_search(request):
     if request.method == "GET":
         try:
+            search          = request.GET.get("search")
+            ingredient_list = request.GET.get("ingredient_list")
+            cuisine_type    = request.GET.get("cuisine_type")
+            origin          = request.GET.get("origin")
+            min_rate        = request.GET.get("min_rate")
             
             # Construction du path Ingredient
             ingredient_query = ""
             for ingredient in ingredient_list.split(","):
-                ingredient_query += f", (r)-[CONTIENT]->(:Ingredient{{titre:{ingredient}}})"
+                ingredient_query += f", (r)-[:CONTIENT]->(:Ingredient{{titre:{ingredient}}})"
                 
             # Construction du path type de cuisine
             cuisine_type_query = ""
             if(cuisine_type):
-                cuisine_type_query = f", (r)-[APPARTIENT_A]->(:Category{{titre:{cuisine_type}}})"
+                cuisine_type_query = f", (r)-[:APPARTIENT_A]->(:Category{{titre:{cuisine_type}}})"
                 
             query = "MATCH (r:Recipe)" 
             + ingredient_query 
@@ -86,19 +95,22 @@ def get_recipe_by_advanced_search(request, search, ingredient_list, cuisine_type
 
 # Récupération des recherches correspondant à la recherche en cours (recommandation)
 @csrf_exempt
-def get_recommanded_recipes(request, ingredient_list, cuisine_type, origin):
+def get_recommanded_recipes(request):
     if request.method == "GET":
         try:
+            ingredient_list = request.GET.get("ingredient_list")
+            cuisine_type    = request.GET.get("cuisine_type")
+            origin          = request.GET.get("origin")
             
             # Construction du path Ingredient
             ingredient_query = ""
             for ingredient in ingredient_list.split(","):
-                ingredient_query += f"OPTIONAL MATCH (r)-[CONTIENT]->(:Ingredient{{titre:{ingredient}}})"
+                ingredient_query += f"OPTIONAL MATCH (r)-[:CONTIENT]->(:Ingredient{{titre:{ingredient}}})"
                 
             # Construction du path type de cuisine
             cuisine_type_query = ""
             if(cuisine_type):
-                cuisine_type_query = f"OPTIONAL MATCH (r)-[APPARTIENT_A]->(:Category{{titre:{cuisine_type}}})"
+                cuisine_type_query = f"OPTIONAL MATCH (r)-[:APPARTIENT_A]->(:Category{{titre:{cuisine_type}}})"
                 
             query = "MATCH (r:Recipe)" 
             + ingredient_query 
