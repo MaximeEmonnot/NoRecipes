@@ -28,7 +28,7 @@ function AdvancedSearchRecipeList()
               cuisine_type: cuisine,
               origin: origine,
               min_rate: note
-            }
+            };
 
             const response = await axios.get('http://localhost:8000/databaseTest/advanced_recipe_search/', {params: params});
             if (response.data && response.data.recipes) {

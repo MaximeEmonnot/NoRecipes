@@ -111,25 +111,40 @@ def get_recipe_by_advanced_search(request):
 def get_recommanded_recipes(request):
     if request.method == "GET":
         try:
+            current_recipe  = request.GET.get("current")
             ingredient_list = request.GET.get("ingredient_list")
             cuisine_type    = request.GET.get("cuisine_type")
             origin          = request.GET.get("origin")
             
             # Construction du path Ingredient
             ingredient_query = ""
+            ing_index = 0
             for ingredient in ingredient_list.split(","):
-                ingredient_query += f"OPTIONAL MATCH (r)-[:CONTIENT]->(:Ingredient{{titre:'{ingredient}'}})"
+                ingredient_query += f" OPTIONAL MATCH (r)-[:CONTIENT]->({chr(ord('a') + ing_index)}:Ingredient{{titre:'{ingredient}'}})"
+                ing_index += 1
+            
+            # Contruction de la clause WHERE additionnelle pour les ingrédients
+            ingredient_with_query = ""
+            if(ing_index > 0):
+                ingredient_with_query = " WITH r, COUNT(a) AS num_a"
+                for i in range(1, ing_index):
+                    ingredient_with_query += f", COUNT({chr(ord('a') + i)}) AS num_{chr(ord('a') + i)}"
+                ingredient_with_query += " WHERE num_a"
+                for i in range(1, ing_index):
+                    ingredient_with_query += f" + num_{chr(ord('a') + i)}"
+                ingredient_with_query += " > 0"
                 
             # Construction du path type de cuisine
             cuisine_type_query = ""
             if(cuisine_type):
-                cuisine_type_query = f"OPTIONAL MATCH (r)-[:APPARTIENT_A]->(:Category{{titre:'{cuisine_type}'}})"
+                cuisine_type_query = f" OPTIONAL MATCH (r)-[:APPARTIENT_A]->(:Category{{titre:'{cuisine_type}'}})"
                 
-            query = "MATCH (r:Recipe)" 
-            + ingredient_query 
-            + cuisine_type_query
-            + f"WHERE r.origine = {origin}"
-            + "ORDER BY r.note DESC"
+            # Construction de la clause WHERE
+            where_query = ""
+            if(origin and current_recipe):
+                where_query = f" WHERE r.origine = '{origin}' AND r.titre <> '{current_recipe}'"
+                
+            query = "MATCH (r:Recipe)" + where_query + ingredient_query + cuisine_type_query + ingredient_with_query + " RETURN DISTINCT r ORDER BY r.note DESC LIMIT 3"
                 
             answer, summary, keys = RunCypher(query)
             
