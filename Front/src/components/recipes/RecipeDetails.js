@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import '../../styles/RecipeDetails.css';
+import RecipeCard from './RecipeCard';
 
 const RecipeDetails = () => {
     const { title } = useParams();
@@ -11,6 +12,7 @@ const RecipeDetails = () => {
     const [categorie, setCategory] = useState([]);
     const [utensils, setUtensils] = useState([]);
     const [comments, setComments] = useState([]);
+    const [recipes, setRecipes] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [showCommentForm, setShowCommentForm] = useState(false);
@@ -26,9 +28,11 @@ const RecipeDetails = () => {
                 setRecipe(recipeResponse.data.recipe);
 
                 // Récupérer la catégorie
+                var categorieResponseSnapshot = {};
                 try {
                     const categorieReponse = await axios.get(`http://localhost:8000/databaseTest/categories/by_recipe/${title}`);
                     setCategory(categorieReponse.data.categorie.titre || "Non spécifiée");
+                    categorieResponseSnapshot = categorieReponse;
                 } catch (error) {
                     console.warn("Aucune catégorie trouvée pour cette recette.");
                 }
@@ -42,11 +46,31 @@ const RecipeDetails = () => {
                 setUtensils(utensilsResponse.data.ustensiles);
 
                 // Récupérer les commentaires
+                setLoading(false);
                 const commentsResponse = await axios.get(`http://localhost:8000/databaseTest/comments/all/${title}`);
                 setComments(commentsResponse.data.commentaires);
 
-                setLoading(false);
+                // Récupérer les recettes recommandées
+                let ingredient_list = ""
+                ingredientsResponse.data.ingredients.map((ing, index) => {
+                    ingredient_list += (ingredient_list.length == 0) ? ing.ingredient : ("," + ing.ingredient); 
+                });
+
+                const params = {
+                    current: recipeResponse.data.recipe.titre,
+                    ingredient_list: ingredient_list,
+                    cuisine_type: categorieResponseSnapshot.data.categorie.titre,
+                    origin: recipeResponse.data.recipe.origine
+                };
+
+                console.log(params);
+
+                const recommandedRecipes = await axios.get("http://localhost:8000/databaseTest/recommanded_recipes/", {params : params});
+
+                setRecipes(recommandedRecipes.data.recipes);
+
             } catch (err) {
+                console.error(err);
                 setError("Erreur lors du chargement des données.");
                 setLoading(false);
             }
@@ -263,7 +287,32 @@ const RecipeDetails = () => {
                         </div>
                     )}
                 </>
-            )}
+                )}
+            </div>
+            <div className="suggestion">
+                <h2>Ces recettes pourraient également vous plaire ... </h2>
+                <br/>
+                <div className="recipe-list">
+                <section className="recipe-cards">
+                {recipes.length > 0 ? (
+                    recipes.map((recipe, index) => {
+                    const imgSrc = recipe.images && recipe.images.length > 0 ? `http://localhost:8000/media/${recipe.images[0]}` : 'default-image.jpg';
+                    return (
+                      <RecipeCard
+                        key={index}
+                        title={recipe.titre}
+                        description={recipe.description}
+                        imgSrc={imgSrc}
+                        color="#FFFFFF"
+                      />
+                    );
+                  })
+              ) : (
+                <p>Aucune recette trouvée.</p>
+              )}
+            </section>
+            </div>
+            </div>
         </div>
     );
 };
