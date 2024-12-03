@@ -130,190 +130,185 @@ const RecipeDetails = () => {
     }
 
     return (
-        <div className="recipe-details">
-            {recipe && (
-                <>
-                    {/* Carrousel */}
-                    <div className="image-container">
-                        {recipe.images.length > 1 ? (
-                            <div className="carousel">
-                            {recipe.images.map((image, index) => {
-                                // Vérification si l'image est locale ou externe
-                                const imgSrc = image.startsWith('http') || image.startsWith('https')
-                                ? image // URL externe
-                                : `http://localhost:8000/media/${image}`; // Image locale
-
-                                return (
-                                <div key={index} className="carousel-item">
-                                    <img
-                                    src={imgSrc}
-                                    alt={`Image ${index + 1} de ${recipe.titre}`}
-                                    />
+        <>
+            <div className="recipe-details">
+                {recipe && (
+                    <>
+                        {/* Carrousel */}
+                        <div className="image-container">
+                            {recipe.images.length > 1 ? (
+                                <div className="carousel">
+                                    {recipe.images.map((image, index) => {
+                                        const imgSrc = image.startsWith('http') || image.startsWith('https')
+                                            ? image // URL externe
+                                            : `http://localhost:8000/media/${image}`; // Image locale
+                                        return (
+                                            <div key={index} className="carousel-item">
+                                                <img
+                                                    src={imgSrc}
+                                                    alt={`Image ${index + 1} de ${recipe.titre}`} />
+                                            </div>
+                                        );
+                                    })}
                                 </div>
-                                );
-                            })}
-                            </div>
-                        ) : (
-                            <div className="single-image">
-                            {recipe.images.length > 0 && (
-                                <img
-                                src={
-                                    recipe.images[0].startsWith('http') || recipe.images[0].startsWith('https')
-                                    ? recipe.images[0] // URL externe
-                                    : `http://localhost:8000/media/${recipe.images[0]}` // Image locale
-                                }
-                                alt={`Image de ${recipe.titre}`}
-                                />
-                            )}
-                            </div>
-                        )}
-                    </div>
-
-                    {/* Détails de la recette */}
-                    <div className="recipe-info">
-                        <h1>{recipe.titre}</h1>
-                        <p><strong>Catégorie :</strong> {categorie}</p>
-                        <p><strong>Origine :</strong> {recipe.origine}</p>
-                        <p><strong>Description :</strong> {recipe.description}</p>
-                        <p><strong>Nombre de personnes :</strong> {recipe.nombre_personnes}</p>
-                        <p><strong>Note :</strong> {recipe.note}/5</p>
-                        <p><strong>Temps de préparation :</strong> {recipe.temps_preparation} minutes</p>
-                        <p><strong>Temps de cuisson :</strong> {recipe.temps_cuisson} minutes</p>
-                        <p><strong>Temps de repos :</strong> {recipe.temps_repos} minutes</p>
-                    </div>
-
-                    {/* Liste des ingrédients */}
-                    <div className="ingredients-section">
-                        <h2>Ingrédients</h2>
-                        <div className="ingredients-list">
-                            {ingredients.map((ingredient, index) => (
-                                <div key={index} className="ingredient-card">
-                                    <p>{ingredient.quantite} {ingredient.type_unite} {ingredient.ingredient}</p>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-
-                    {/* Liste des ustensiles */}
-                    <div className="utensils-section">
-                        <h2>Ustensiles</h2>
-                        <div className="utensils-list">
-                            {utensils.map((utensil, index) => (
-                                <div key={index} className="utensil-card">
-                                    <p>{utensil.nombre} x {utensil.utensil}</p>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-
-                    {/* Liste des commentaires */}
-                    <div className="comments-section">
-                        <h2>Commentaires</h2>
-                        {comments.length > 0 ? (
-                            comments.map((comment, index) => (
-                                <div key={index} className="comment-card">
-                                    <p><strong>Note :</strong> {comment.note}/5</p>
-                                    <p>{comment.texte}</p>
-                                    {comment.images.length > 0 && (
-                                        <img src={comment.images[0]} alt="Commentaire associé" />
+                            ) : (
+                                <div className="single-image">
+                                    {recipe.images.length > 0 && (
+                                        <img
+                                            src={recipe.images[0].startsWith('http') || recipe.images[0].startsWith('https')
+                                                ? recipe.images[0] // URL externe
+                                                : `http://localhost:8000/media/${recipe.images[0]}` // Image locale
+                                            }
+                                            alt={`Image de ${recipe.titre}`} />
                                     )}
                                 </div>
-                            ))
-                        ) : (
-                            <p>Aucun commentaire pour cette recette.</p>
-                        )}
-
-                        {/* Bouton pour ajouter un commentaire */}
-                        <div className="actions">
-                            <button onClick={() => setShowCommentForm(!showCommentForm)} className="add-comment-button">
-                                Ajouter un commentaire
-                            </button>
-                            {showCommentForm && (
-                                <form onSubmit={handleAddComment} className="comment-form">
-                                    <textarea
-                                        value={commentText}
-                                        onChange={(e) => setCommentText(e.target.value)}
-                                        placeholder="Votre commentaire"
-                                        required
-                                        className="comment-textarea"
-                                    />
-                                    <input
-                                        type="number"
-                                        value={commentNote}
-                                        onChange={(e) => setCommentNote(e.target.value)}
-                                        placeholder="Note sur 5"
-                                        min="1"
-                                        max="5"
-                                        required
-                                        className="comment-note"
-                                    />
-                                    <button type="submit" className="submit-comment-button">Valider</button>
-                                </form>
                             )}
                         </div>
-                    </div>
 
-                    {/* Boutons pour modifier et supprimer */}
-                    <div className="recipe-action-buttons">
-                        <button onClick={handleEditRecipe} className="edit-recipe-button">Modifier la recette</button>
-                        <button
-                            onClick={() => setShowConfirmDelete(true)}
-                            className="delete-recipe-button"
-                        >
-                            Supprimer la recette
-                        </button>
-                    </div>
+                        {/* Détails de la recette */}
+                        <div className="recipe-info">
+                            <h1>{recipe.titre}</h1>
+                            <p><strong>Catégorie :</strong> {categorie}</p>
+                            <p><strong>Origine :</strong> {recipe.origine}</p>
+                            <p><strong>Description :</strong> {recipe.description}</p>
+                            <p><strong>Nombre de personnes :</strong> {recipe.nombre_personnes}</p>
+                            <p><strong>Note :</strong> {recipe.note}/5</p>
+                            <p><strong>Temps de préparation :</strong> {recipe.temps_preparation} minutes</p>
+                            <p><strong>Temps de cuisson :</strong> {recipe.temps_cuisson} minutes</p>
+                            <p><strong>Temps de repos :</strong> {recipe.temps_repos} minutes</p>
+                        </div>
 
-                    {/* Boîte de confirmation pour suppression */}
-                    {showConfirmDelete && (
-                        <div className="confirm-delete-modal">
-                            <div className="confirm-delete-content">
-                                <p>Êtes-vous sûr de vouloir supprimer cette recette ?</p>
-                                <div className="confirm-delete-buttons">
-                                    <button
-                                        onClick={handleDeleteRecipe}
-                                        className="confirm-button"
-                                    >
-                                        Oui
-                                    </button>
-                                    <button
-                                        onClick={() => setShowConfirmDelete(false)}
-                                        className="cancel-button"
-                                    >
-                                        Non
-                                    </button>
-                                </div>
+                        {/* Liste des ingrédients */}
+                        <div className="ingredients-section">
+                            <h2>Ingrédients</h2>
+                            <div className="ingredients-list">
+                                {ingredients.map((ingredient, index) => (
+                                    <div key={index} className="ingredient-card">
+                                        <p>{ingredient.quantite} {ingredient.type_unite} {ingredient.ingredient}</p>
+                                    </div>
+                                ))}
                             </div>
                         </div>
-                    )}
-                </>
+
+                        {/* Liste des ustensiles */}
+                        <div className="utensils-section">
+                            <h2>Ustensiles</h2>
+                            <div className="utensils-list">
+                                {utensils.map((utensil, index) => (
+                                    <div key={index} className="utensil-card">
+                                        <p>{utensil.nombre} x {utensil.utensil}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Liste des commentaires */}
+                        <div className="comments-section">
+                            <h2>Commentaires</h2>
+                            {comments.length > 0 ? (
+                                comments.map((comment, index) => (
+                                    <div key={index} className="comment-card">
+                                        <p><strong>Note :</strong> {comment.note}/5</p>
+                                        <p>{comment.texte}</p>
+                                    </div>
+                                ))
+                            ) : (
+                                <p>Aucun commentaire pour cette recette.</p>
+                            )}
+                            {/* Bouton pour ajouter un commentaire */}
+                            <div className="actions">
+                                <button onClick={() => setShowCommentForm(!showCommentForm)} className="add-comment-button">
+                                    Ajouter un commentaire
+                                </button>
+                                {showCommentForm && (
+                                    <form onSubmit={handleAddComment} className="comment-form">
+                                        <textarea
+                                            value={commentText}
+                                            onChange={(e) => setCommentText(e.target.value)}
+                                            placeholder="Votre commentaire"
+                                            required
+                                            className="comment-textarea" />
+                                        <input
+                                            type="number"
+                                            value={commentNote}
+                                            onChange={(e) => setCommentNote(e.target.value)}
+                                            placeholder="Note sur 5"
+                                            min="1"
+                                            max="5"
+                                            required
+                                            className="comment-note" />
+                                        <button type="submit" className="submit-comment-button">Valider</button>
+                                    </form>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Boutons pour modifier et supprimer */}
+                        <div className="recipe-action-buttons">
+                            <button onClick={handleEditRecipe} className="edit-recipe-button">Modifier la recette</button>
+                            <button
+                                onClick={() => setShowConfirmDelete(true)}
+                                className="delete-recipe-button"
+                            >
+                                Supprimer la recette
+                            </button>
+                        </div>
+
+                        {/* Boîte de confirmation pour suppression */}
+                        {showConfirmDelete && (
+                            <div className="confirm-delete-modal">
+                                <div className="confirm-delete-content">
+                                    <p>Êtes-vous sûr de vouloir supprimer cette recette ?</p>
+                                    <div className="confirm-delete-buttons">
+                                        <button
+                                            onClick={handleDeleteRecipe}
+                                            className="confirm-button"
+                                        >
+                                            Oui
+                                        </button>
+                                        <button
+                                            onClick={() => setShowConfirmDelete(false)}
+                                            className="cancel-button"
+                                        >
+                                            Non
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                    </>
                 )}
             </div>
             <div className="suggestion">
                 <h2>Ces recettes pourraient également vous plaire ... </h2>
-                <br/>
+                <br />
                 <div className="recipe-list">
-                <section className="recipe-cards">
-                {recipes.length > 0 ? (
-                    recipes.map((recipe, index) => {
-                    const imgSrc = recipe.images && recipe.images.length > 0 ? `http://localhost:8000/media/${recipe.images[0]}` : 'default-image.jpg';
-                    return (
-                      <RecipeCard
-                        key={index}
-                        title={recipe.titre}
-                        description={recipe.description}
-                        imgSrc={imgSrc}
-                        color="#FFFFFF"
-                      />
-                    );
-                  })
-              ) : (
-                <p>Aucune recette trouvée.</p>
-              )}
-            </section>
+                    <section className="recipe-cards">
+                        {recipes.length > 0 ? (
+                            recipes.map((recipe, index) => {
+                            const imgSrc = recipe.images && recipe.images.length > 0
+                                ? (recipe.images[0].startsWith('http') || recipe.images[0].startsWith('https') // Image externe
+                                ? recipe.images[0] // On utilise directement l'url de l'image
+                                : `http://localhost:8000/media/${recipe.images[0]}` // Si c'est une image locale, on utilise le chemin local
+                                )
+                                : 'default-image.jpg'; 
+                            return (
+                                <RecipeCard
+                                key={index}
+                                title={recipe.titre}
+                                description={recipe.description}
+                                imgSrc={imgSrc}
+                                color="#FFFFFF"
+                                />
+                            );
+                            })
+                        ) : (
+                            <p>Aucune recette trouvée.</p>
+                        )}
+                    </section>
+                </div>
             </div>
-            </div>
-        </div>
+        </>
     );
 };
 
