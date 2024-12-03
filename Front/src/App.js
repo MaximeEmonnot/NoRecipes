@@ -12,6 +12,7 @@ import AddCategory from './components/Catégories/AddCategory';
 import RecipeList from './components/recipes/AllRecipes';
 import RecipeDetails from './components/recipes/RecipeDetails';
 import SimpleSearchRecipeList from './components/recipes/SimpleSearchRecipes';
+import AdvancedSearchRecipeList from './components/recipes/AdvancedSearchRecipes';
 
 const App = () => {
     return (
@@ -27,6 +28,7 @@ const App = () => {
                 <Route path='/AllRecipes/category/:title' element={<RecipeList />}/>
                 <Route path='/RecipeDetails/:title' element={<RecipeDetails />}/>
                 <Route path='/SimpleSearchRecipeList/:search' element={<SimpleSearchRecipeList />}/>
+                <Route path='/AdvancedSearchRecipeList' element={<AdvancedSearchRecipeList />}/>
             </Routes>
             <Footer />
         </Router>
