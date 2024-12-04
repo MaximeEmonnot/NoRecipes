@@ -44,9 +44,10 @@ Après avoir importé le fichier Cypher dans Neo4j, vous devez ajuster un param�
 - Ensuite exécuter la commande **python manage.py runserver** pour lancer le serveur
 
 ### A faire sur le front
-Exécuter la commande "npm start" dans un terminal intégré, à partir du répertoire front.
+- Ouvrir un terminal dans le dossier front
+- Exécuter d'abord la commande "**npm install**" pour installer les dépendances 
+- Exécuter la commande "**npm start**" dans un terminal intégré, à partir du répertoire front.
 
-Note : Si nécessaire, exécutez d'abord la commande suivante pour installer les dépendances :
 
 
 
