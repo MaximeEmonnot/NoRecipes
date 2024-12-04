@@ -27,7 +27,7 @@ Note : Ce fichier doit être exécuté dans Neo4j pour initialiser les données 
 
 ## Instruction pour lancer l'application 
 
-# A faire sur Neo4J
+### A faire sur Neo4J
 Après avoir importé le fichier Cypher dans Neo4j, vous devez ajuster un paramètre. Pour ce faire :
 
 - Cliquer sur les trois petits points (...) en haut à droite, puis sélectionnez Settings :
@@ -38,12 +38,12 @@ Après avoir importé le fichier Cypher dans Neo4j, vous devez ajuster un param�
 
 
 
-# A faire sur le Back
+### A faire sur le Back
 - Ouvrir un terminal dans le dossier back
 - Exécuter la commande "**pip install -r requirements.txt**"
 - Ensuite exécuter la commande **python manage.py runserver** pour lancer le serveur
 
-# A faire sur le front
+### A faire sur le front
 Exécuter la commande "npm start" dans un terminal intégré, à partir du répertoire front.
 
 Note : Si nécessaire, exécutez d'abord la commande suivante pour installer les dépendances :
