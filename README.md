@@ -36,6 +36,8 @@ Ce projet permettra donc ainsi de prendre en main les différentes technologies 
 
 ## Choix technologiques
 
+Ce projet a été réalisé avec les technologies suivantes : 
+
 | Back-end | Front-end | Base de données |
 |----------|-----------|-----------------|
 | Django   | React     | Neo4J           |
@@ -267,7 +269,7 @@ Nous pouvons insérer les données des deux manières suivantes :
 
 #### Insertion via l'interface graphique de Neo4j Desktop
 
-Accédez à l'onglet **File > Add file(s) to Project** : 
+Accédez à l'onglet **File > Add file(s) to Project** :  
 ![Ajout fichier Cypher](Docs/image-5.png)
 
 Sélectionnez le fichier Cypher au chemin cité précédemment : 
@@ -279,26 +281,26 @@ Ouvrons à présent Neo4j Browser :
 Nous pouvons à présent exécuter notre fichier Cypher :  
 ![Exécution fichier Cypher](Docs/image-8.png)
 
-Insertion terminée ! 
+Insertion terminée !  
 ![Insertion finale](Docs/image-9.png)
 
 #### Insertion via terminal
 
-Ouvrez un terminal et exécutez les commandes suivantes : 
+Ouvrez un terminal et exécutez les commandes suivantes :  
 ```shell
 cd Back/databaseTest/Données
 bin/cypher-shell -u neo4j -f No_Recipe.cypher
 ```
 
 ### Initialisation Back-end
-Afin d'initialiser l'environnement Back-end, ouvrez un terminal et entrez les commandes suivantes : 
+Afin d'initialiser l'environnement Back-end, ouvrez un terminal et entrez les commandes suivantes :   
 ```shell
 cd Back
 pip install -r requirements.txt
 ```
 
 ### Initialisation Front-end
-Afin d'initialiser l'environnement Front-end, ouvrez un terminal et entrez les commandes suivantes : 
+Afin d'initialiser l'environnement Front-end, ouvrez un terminal et entrez les commandes suivantes :  
 ```shell
 cd Front
 npm install
