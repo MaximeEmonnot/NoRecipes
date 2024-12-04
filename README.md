@@ -23,7 +23,9 @@ Concevoir une solution efficace pour gérer ces données interconnectées tout e
 Le fichier Cypher, contenant les scripts nécessaires pour alimenter la base de données Neo4j, est disponible dans le répertoire suivant :
 Back/databaseTest/Données.
 
-Note : Ce fichier doit être exécuté dans Neo4j pour initialiser les données avant de lancer l'application.
+Note : Ce fichier doit être exécuté dans Neo4j pour initialiser les données avant de lancer l'application. 
+
+*Vous pouvez également charger les données en exécutant la commande ""**bin/cypher-shell -u <username> -p <password> -f No_Recipe.cypher**"" dans un bash.*
 
 ## Instruction pour lancer l'application 
 
