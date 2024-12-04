@@ -65,7 +65,7 @@ const HomePage = () => {
             <div className="recipe-action-button">
                 <button onClick={handleAddRecipe} className="edit-recipe-button">Ajouter la recette</button>
             </div>
-            <section className="recipe-cards">
+            <section className="recipe-cards">                  
                 {categories.length > 0 ? (
                     categories.map((category, index) => {
                         const imgSrc = category.images && category.images.length > 0
