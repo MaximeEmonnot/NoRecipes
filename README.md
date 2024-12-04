@@ -46,7 +46,7 @@ Après avoir importé le fichier Cypher dans Neo4j, vous devez ajuster un param�
 ### A faire sur le front
 - Ouvrir un terminal dans le dossier front
 - Exécuter d'abord la commande "**npm install**" pour installer les dépendances 
-- Exécuter la commande "**npm start**" dans un terminal intégré, à partir du répertoire front.
+- Exécuter la commande "**npm start**" pour lancer le front.
 
 
 
