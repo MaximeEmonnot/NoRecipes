@@ -1,15 +1,18 @@
 import React, { useState } from 'react';
 import '../styles/AdvancedSearch.css';
+import { useNavigate } from 'react-router-dom';
 
 const AdvancedSearch = ({ onSearch }) => {
     const [filters, setFilters] = useState({
+        titre: '',
         ingredients: '',
         cuisineType: '',
         origin: '',
         dishType: '',
-        rating: '',
-        views: ''
+        rating: ''
     });
+
+    const navigate = useNavigate();
 
     // Gestion des champs du formulaire
     const handleChange = (e) => {
@@ -23,6 +26,31 @@ const AdvancedSearch = ({ onSearch }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+      
+        if(filters.ingredients.length != 0)
+            filters.ingredients = filters.ingredients.replace(" ", "")
+
+        // Construction de la recherche via les filtres
+        let search = "";
+        if(filters.titre || filters.ingredients || filters.cuisineType || filters.origin || filters.dishType || filters.rating)
+        {
+            const params = new URLSearchParams();
+
+            if(filters.titre)       params.append("titre", filters.titre);
+            if(filters.ingredients) params.append("ingredients", filters.ingredients);
+            if(filters.cuisineType) params.append("cuisine", filters.cuisineType);
+            if(filters.origin)      params.append("origine", filters.origin);
+            if(filters.dishType)    params.append("plat", filters.dishType);
+            if(filters.rating)      params.append("note", filters.rating);
+
+            search = params.toString();
+        }
+
+        navigate({
+            pathname: "/AdvancedSearchRecipeList",
+            search: search
+        })
+        
         if (onSearch) {
             onSearch(filters); 
         }
@@ -32,6 +60,18 @@ const AdvancedSearch = ({ onSearch }) => {
         <div className="advanced-search">
             <h2>Recherche avancée</h2>
             <form onSubmit={handleSubmit}>
+                {/* Par nom */}
+                <div className="form-group">
+                    <label>Par nom :</label>
+                    <input 
+                        type="text"
+                        name="titre"
+                        placeholder="Ex: Salade"
+                        value={filters.titre}
+                        onChange={handleChange}
+                    />
+                </div>
+
                 {/* Par ingrédients */}
                 <div className="form-group">
                     <label>Par ingrédients :</label>

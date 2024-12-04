@@ -11,23 +11,28 @@ from utils import RunCypher, GetDataFromNode
 def add_comment(request, recipe_title):
     if request.method == "POST":
         try:
-            data = json.loads(request.body)
-            texte = data.get("texte")
-            images = data.get("images", [])
-            note = data.get("note")
+            # data = json.loads(request.body)
+            texte = request.POST.get("texte")
+            # images = request.POST.get("images", [])
+            note = request.POST.get("note")
 
             if not texte:
                 return JsonResponse({"error": "Veuillez laisser un commentaire."}, status=400)
+
+            try:
+                note = int(note) 
+            except ValueError:
+                return JsonResponse({"error": "La note doit être un entier."}, status=400)
+
             if not note or not (1 <= note <= 5):
                 return JsonResponse({"error": "Veuillez noter la recette entre 1 et 5."}, status=400)
-
 
             try:
                 recipe = Recipe.nodes.get(titre=recipe_title)
             except Recipe.DoesNotExist:
                 return JsonResponse({"error": "Recette non trouvée."}, status=404)
 
-            commentaire = Comments(texte=texte, images=images, note=note)
+            commentaire = Comments(texte=texte, note=note)
             commentaire.save()
             commentaire.recette.connect(recipe)
 
@@ -39,8 +44,7 @@ def add_comment(request, recipe_title):
 
             return JsonResponse({
                 "message": "Commentaire ajouté avec succès",
-                "note_moyenne": recipe.note,
-                "comment_id": commentaire.uuid
+                "note_moyenne": recipe.note
                 })
         
         except json.JSONDecodeError:

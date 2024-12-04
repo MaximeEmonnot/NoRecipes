@@ -1,6 +1,6 @@
 from django.db import models
 import uuid
-from neomodel import StructuredNode, StringProperty, IntegerProperty, FloatProperty, JSONProperty, RelationshipTo, RelationshipFrom, UniqueIdProperty, StructuredRel
+from neomodel import StructuredNode, ArrayProperty, StringProperty, IntegerProperty, FloatProperty, JSONProperty, RelationshipTo, RelationshipFrom, UniqueIdProperty, StructuredRel
 
 # Create your models here.
 
@@ -54,11 +54,10 @@ class Recipe(StructuredNode):
     total_notes = IntegerProperty(default=0)  # Nombre de notes reçues
     somme_notes = IntegerProperty(default=0)  # Somme des notes pour calculer la moyenne
     description = StringProperty()
-    images = JSONProperty()
+    images = ArrayProperty()
     nombre_personnes = IntegerProperty()
     temps_preparation = IntegerProperty()
     temps_cuisson = IntegerProperty()
-    temps_repos = IntegerProperty()
 
     # Relation recette - catégorie
     categorie = RelationshipTo('Category', 'APPARTIENT_A')
@@ -74,7 +73,7 @@ class Recipe(StructuredNode):
 
 class Category(StructuredNode):
     titre = StringProperty(unique_index=True, required=True)
-    images = JSONProperty()
+    images = ArrayProperty()
 
     # Relation catégorie - recette
     recettes = RelationshipFrom('Recipe', 'APPARTIENT_A')

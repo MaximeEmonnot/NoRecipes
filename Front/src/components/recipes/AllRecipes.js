@@ -48,7 +48,12 @@ function RecipeList() {
             <section className="recipe-cards">
               {recipes.length > 0 ? (
                 recipes.map((recipe, index) => {
-                  const imgSrc = recipe.images && recipe.images.length > 0 ? `http://localhost:8000/media/${recipe.images[0]}` : 'default-image.jpg';
+                  const imgSrc = recipe.images && recipe.images.length > 0
+                    ? (recipe.images[0].startsWith('http') || recipe.images[0].startsWith('https') // Image externe
+                      ? recipe.images[0] // On utilise directement l'url de l'image
+                      : `http://localhost:8000/media/${recipe.images[0]}` // Si c'est une image locale, on utilise le chemin local
+                    )
+                    : 'default-image.jpg'; 
                   return (
                     <RecipeCard
                       key={index}
